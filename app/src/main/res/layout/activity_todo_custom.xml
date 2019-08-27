@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.TodoCustomActivity"
+    android:background="#2FC0BF"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar_todo_custom"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#2FC0BF"
+        android:orientation="vertical">
+
+        <TextView
+            android:textStyle="bold"
+            android:id="@+id/Todo_Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="What is to be done?"
+            android:textColor="#FFFFFF" />
+
+        <EditText
+            android:backgroundTint="#FFFFFF"
+            android:textColor="#FFFFFF"
+            android:id="@+id/edtTodoName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:ems="10"
+            android:hint="Todo name"
+            android:inputType="textPersonName"
+            android:textColorHint="#FFFFFF" />
+
+        <TextView
+            android:textStyle="bold"
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="Due date"
+            android:textColor="#FFFFFF" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:backgroundTint="#FFFFFF"
+                android:textColor="#FFFFFF"
+                android:id="@+id/edt_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:ems="10"
+                android:hint="time"
+                android:textColorHint="#FFFFFF" />
+
+            <ImageView
+                android:id="@+id/ivTime"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:srcCompat="@drawable/ic_alarm_black_24dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:backgroundTint="#FFFFFF"
+                android:id="@+id/edt_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:ems="10"
+                android:hint="date"
+                android:inputType="textPersonName"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#FFFFFF" />
+
+            <ImageView
+                android:id="@+id/ivDate"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:srcCompat="@drawable/ic_date_range_black_24dp" />
+        </LinearLayout>
+
+        <TextView
+            android:textStyle="bold"
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="Description"
+            android:textColor="#FFFFFF" />
+
+        <EditText
+            android:backgroundTint="#FFFFFF"
+            android:textColor="#FFFFFF"
+            android:id="@+id/edtDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:ems="10"
+            android:gravity="bottom|left"
+            android:hint=""
+            android:inputType="textMultiLine"
+            android:lines="3"
+            android:scrollbars="vertical" />
+
+    </LinearLayout>
+
+</LinearLayout>
