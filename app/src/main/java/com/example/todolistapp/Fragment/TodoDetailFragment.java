@@ -1,5 +1,7 @@
 package com.example.todolistapp.Fragment;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,13 +13,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.todolistapp.Activity.MainActivity;
+import com.example.todolistapp.Activity.TodoCustomActivity;
 import com.example.todolistapp.Class.Todo;
 import com.example.todolistapp.DataBase.DBHelper;
 import com.example.todolistapp.R;
+
+import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class TodoDetailFragment extends Fragment {
@@ -25,6 +40,17 @@ public class TodoDetailFragment extends Fragment {
     Button btnUpdate, btnDelete;
     TextView name, date, time, description;
     DBHelper dbHelper;
+
+    ImageView DatePicker, TimePicker;
+
+    String dateShow, timeShow, datepicked, timepicked;
+    int years, months, days;
+    int hours, minutes;
+    final Calendar calendar = Calendar.getInstance();
+
+    /* date time format java */
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 
     public TodoDetailFragment() {
         // Required empty public constructor
@@ -83,6 +109,46 @@ public class TodoDetailFragment extends Fragment {
                 deleteClick(todo);
             }
         });
+
+        /*
+        *
+        * Time, date picker
+        * */
+
+        // get time picked
+        // convert from string to date, time and set on default datetime picker when you open.
+        try {
+            Date date = dateFormat.parse(datepicked);
+            Date time = timeFormat.parse(timepicked);
+            LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalTime localTime = time.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
+
+            days = localDate.getDayOfMonth();
+            months = localDate.getMonthValue();
+            years = localDate.getYear();
+
+            hours = localTime.getHour();
+            minutes = localTime.getMinute();
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        DatePicker = view.findViewById(R.id.ivDate);
+        DatePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setDatePicker();
+            }
+        });
+
+        TimePicker = view.findViewById(R.id.ivTime);
+        TimePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setTimePicker();
+            }
+        });
     }
 
     /* mapping */
@@ -102,6 +168,9 @@ public class TodoDetailFragment extends Fragment {
         date.setText(todo.getTodoDate());
         time.setText(todo.getTodoTime());
         description.setText(todo.getTodoDescription());
+
+        datepicked = date.getText().toString();
+        timepicked = time.getText().toString();
     }
 
     /* update database's data when click */
@@ -155,5 +224,42 @@ public class TodoDetailFragment extends Fragment {
         todoDetailFragment.setArguments(bundle);
 
         return  todoDetailFragment;
+    }
+
+    /*
+    * date time picker
+    * */
+    public void setTimePicker() {
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(android.widget.TimePicker timePicker, int i, int i1) {
+                        timeShow = i + ":" + i1;
+
+                        time.setText(timeShow);
+
+                        hours = calendar.get(Calendar.HOUR_OF_DAY);
+                        minutes = calendar.get(Calendar.MINUTE);
+                    }
+                }, hours, minutes, true);
+        timePickerDialog.show();
+    }
+
+    public void setDatePicker() {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(android.widget.DatePicker datePicker, int i, int i1, int i2) {
+                        dateShow = i2 + "/" + (i1 + 1) + "/" + i;
+
+                        date.setText(dateShow);
+
+                        calendar.set(i,i1,i2);
+                        years = calendar.get(Calendar.YEAR);
+                        months = calendar.get(Calendar.MONTH);
+                        days = calendar.get(Calendar.DAY_OF_MONTH);
+                    }
+                }, years, months, days);
+        datePickerDialog.show();
     }
 }

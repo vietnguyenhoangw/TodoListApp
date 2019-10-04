@@ -25,15 +25,29 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:textColor="#000000"
-                android:id="@+id/todoItemDescription"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="17dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:text="Description" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_weight="1"
+                    android:id="@+id/todoItemDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="17dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:text="Description"
+                    android:textColor="#000000" />
+
+                <ImageView
+                    android:id="@+id/imageViewAlarm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:src="@drawable/ic_notifications_black_24dp" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

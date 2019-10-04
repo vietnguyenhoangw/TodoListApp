@@ -53,17 +53,20 @@
             android:orientation="horizontal">
 
             <EditText
-                android:backgroundTint="#FFFFFF"
-                android:textColor="#FFFFFF"
                 android:id="@+id/edt_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:ems="10"
+                android:enabled="false"
                 android:hint="time"
-                android:textColorHint="#FFFFFF" />
+                android:inputType="textPersonName"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#FFFFFF"
+                android:backgroundTint="#FFFFFF"/>
 
             <ImageView
+                android:layout_marginRight="180dp"
                 android:id="@+id/ivTime"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -77,22 +80,31 @@
             android:orientation="horizontal">
 
             <EditText
-                android:backgroundTint="#FFFFFF"
                 android:id="@+id/edt_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:ems="10"
+                android:enabled="false"
                 android:hint="date"
                 android:inputType="textPersonName"
                 android:textColor="#FFFFFF"
-                android:textColorHint="#FFFFFF" />
+                android:textColorHint="#FFFFFF"
+                android:backgroundTint="#FFFFFF" />
 
             <ImageView
+                android:layout_marginRight="35dp"
                 android:id="@+id/ivDate"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 app:srcCompat="@drawable/ic_date_range_black_24dp" />
+
+            <CheckBox
+                android:textColor="@android:color/white"
+                android:layout_marginRight="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Notification"/>
         </LinearLayout>
 
         <TextView
