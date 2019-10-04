@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -32,6 +33,7 @@ public class TodoCustomActivity extends AppCompatActivity {
     ImageView imDate, imTime, imToolbarLeft, imToolbarRight;
     String dateShow, timeShow;
     EditText edtDate, edtTime, edtTodoName, edtDescription;
+    CheckBox checkBoxAlarm;
 
     int years, months, days;
     int hours, minutes;
@@ -128,6 +130,7 @@ public class TodoCustomActivity extends AppCompatActivity {
         edtTime.setFocusable(false);
         edtTodoName = findViewById(R.id.edtTodoName);
         edtDescription = findViewById(R.id.edtDescription);
+        checkBoxAlarm = findViewById(R.id.checkboxAlarm);
 
         /* toolbar */
         toolbar = findViewById(R.id.toolbarTodoCustom);
@@ -168,7 +171,7 @@ public class TodoCustomActivity extends AppCompatActivity {
                         hours = calendar.get(Calendar.HOUR_OF_DAY);
                         minutes = calendar.get(Calendar.MINUTE);
                     }
-                }, hours, minutes, true);
+                }, hours, minutes, false);
         timePickerDialog.show();
     }
 
@@ -206,12 +209,20 @@ public class TodoCustomActivity extends AppCompatActivity {
         String date = edtDate.getText().toString();
         String time = edtTime.getText().toString();
         String description = edtDescription.getText().toString();
+        String status;
+
+        if (checkBoxAlarm.isChecked()) {
+            status = "1";
+        }
+        else {
+            status = "0";
+        }
 
         if (name.trim().length() <= 0) {
             edtTodoName.setError("Provide a task name.");
         }
         else{
-            Todo todo = new Todo(name, date, time, description);
+            Todo todo = new Todo(name, date, time, description, status);
 
             if (dbHelper.insertTodo(todo) > 0) {
                 Intent intent = new Intent(TodoCustomActivity.this, MainActivity.class);

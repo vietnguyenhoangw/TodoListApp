@@ -13,21 +13,24 @@ public class Todo implements Serializable {
     private String todoDate;
     private String todoTime;
     private String todoDescription;
+    private String status;
 
 
-    public Todo(int ID, String todoName, String todoDate, String todoTime, String todoDescription) {
+    public Todo(int ID, String todoName, String todoDate, String todoTime, String todoDescription, String status) {
         this.ID = ID;
         this.todoName = todoName;
         this.todoDate = todoDate;
         this.todoTime = todoTime;
         this.todoDescription = todoDescription;
+        this.status = status;
     }
 
-    public Todo(String todoName, String todoDate, String todoTime, String todoDescription) {
+    public Todo(String todoName, String todoDate, String todoTime, String todoDescription, String status) {
         this.todoName = todoName;
         this.todoDate = todoDate;
         this.todoTime = todoTime;
         this.todoDescription = todoDescription;
+        this.status = status;
     }
 
     public int getID() {
@@ -68,5 +71,13 @@ public class Todo implements Serializable {
 
     public void setTodoDescription(String todoDescription) {
         this.todoDescription = todoDescription;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

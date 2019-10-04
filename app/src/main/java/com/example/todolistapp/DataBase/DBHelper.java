@@ -91,7 +91,8 @@ public class DBHelper {
             String date = cursor.getString(2);
             String time = cursor.getString(3);
             String description = cursor.getString(4);
-            arrayList.add(new Todo(id, todoName, date, time, description));
+            String status = cursor.getString(5);
+            arrayList.add(new Todo(id, todoName, date, time, description, status));
         }
 
         return arrayList;
@@ -110,6 +111,7 @@ public class DBHelper {
         contentValues.put("Date", todo.getTodoDate());
         contentValues.put("Time", todo.getTodoTime());
         contentValues.put("Description", todo.getTodoDescription());
+        contentValues.put("Status", todo.getStatus());
 
         long result = db.insert("Todo",
                 null,
@@ -132,6 +134,7 @@ public class DBHelper {
         contentValues.put("Date", todo.getTodoDate());
         contentValues.put("Time", todo.getTodoTime());
         contentValues.put("Description", todo.getTodoDescription());
+        contentValues.put("Status", todo.getStatus());
 
         long result = db.update("Todo",contentValues,"ID=" + todo.getID(),null);
 

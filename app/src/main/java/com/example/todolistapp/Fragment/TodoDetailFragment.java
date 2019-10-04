@@ -1,7 +1,10 @@
 package com.example.todolistapp.Fragment;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,32 +25,42 @@ import android.widget.Toast;
 
 import com.example.todolistapp.Activity.MainActivity;
 import com.example.todolistapp.Activity.TodoCustomActivity;
+import com.example.todolistapp.Adapter.TodoListAdapter;
 import com.example.todolistapp.Class.Todo;
 import com.example.todolistapp.DataBase.DBHelper;
+import com.example.todolistapp.New.AlarmReceiver;
 import com.example.todolistapp.R;
 
 import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
+
+import static android.content.Context.ALARM_SERVICE;
 
 
 public class TodoDetailFragment extends Fragment {
 
-    Button btnUpdate, btnDelete;
+    Button btnUpdate, btnDelete, set;
     TextView name, date, time, description;
     DBHelper dbHelper;
-
+    CheckBox checkBoxAlarm;
     ImageView DatePicker, TimePicker;
 
-    String dateShow, timeShow, datepicked, timepicked;
+    String dateShow, timeShow, datepicked, timepicked, datetimeAlarm;
     int years, months, days;
     int hours, minutes;
     final Calendar calendar = Calendar.getInstance();
+
+    AlarmManager alarmManager;
+    PendingIntent pendingIntent;
+
 
     /* date time format java */
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -160,6 +174,8 @@ public class TodoDetailFragment extends Fragment {
 
         btnUpdate = view.findViewById(R.id.btnUpdate);
         btnDelete = view.findViewById(R.id.btnDel);
+
+        checkBoxAlarm = view.findViewById(R.id.checkboxAlarm);
     }
 
     /* get properties todo class for recycleview item widget*/
@@ -171,6 +187,30 @@ public class TodoDetailFragment extends Fragment {
 
         datepicked = date.getText().toString();
         timepicked = time.getText().toString();
+        datetimeAlarm = datepicked + " " + timepicked;
+
+        if (todo.getStatus().equals("1")) {
+            checkBoxAlarm.setChecked(true);
+        }
+
+//        try {
+//            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+//            Date date = sdf.parse(datetimeAlarm);
+//            long millis = date.getTime();
+//
+//            alarmManager = (AlarmManager) getContext().getSystemService(ALARM_SERVICE);
+//            Intent intent = new Intent(getContext(), AlarmReceiver.class);
+//
+//            pendingIntent = PendingIntent.getBroadcast(getContext(),
+//                    0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//            alarmManager.set(AlarmManager.RTC_WAKEUP, millis, pendingIntent);
+//
+//            Toast.makeText(getContext(), "" + millis, Toast.LENGTH_SHORT).show();
+//
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
     }
 
     /* update database's data when click */
@@ -181,9 +221,17 @@ public class TodoDetailFragment extends Fragment {
         String dateUpdate = date.getText().toString();
         String timeUpdate = time.getText().toString();
         String descriptionUpdate = description.getText().toString();
+        String status;
+
+        if (checkBoxAlarm.isChecked()) {
+            status = "1";
+        }
+        else {
+            status = "0";
+        }
 
         Todo todoUpdate = new Todo(todo.getID(),
-                nameUpdate, dateUpdate, timeUpdate, descriptionUpdate);
+                nameUpdate, dateUpdate, timeUpdate, descriptionUpdate, status);
 
         try {
             if (dbHelper.updateTodo(todoUpdate) > 0) {
@@ -241,7 +289,7 @@ public class TodoDetailFragment extends Fragment {
                         hours = calendar.get(Calendar.HOUR_OF_DAY);
                         minutes = calendar.get(Calendar.MINUTE);
                     }
-                }, hours, minutes, true);
+                }, hours, minutes, false);
         timePickerDialog.show();
     }
 

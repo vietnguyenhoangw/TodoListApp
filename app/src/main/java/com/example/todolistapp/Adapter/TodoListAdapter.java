@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -61,6 +62,13 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.VH> {
         holder.todoItemTime.setText(todo.getTodoTime());
         holder.todoItemDate.setText(todo.getTodoDate());
 
+        if (todo.getStatus().equals("1")) {
+            holder.todoAlarm.setVisibility(View.VISIBLE);
+        }
+        else {
+            holder.todoAlarm.setVisibility(View.GONE);
+        }
+
         /* item clickListener */
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,6 +78,8 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.VH> {
                 }
             }
         });
+
+
     }
 
     /* return ArraySize for recycle view */
@@ -82,6 +92,7 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.VH> {
     public class VH extends RecyclerView.ViewHolder{
 
         TextView todoItemName, todoItemDescription, todoItemDate, todoItemTime;
+        ImageView todoAlarm;
 
         public VH(@NonNull View itemView) {
             super(itemView);
@@ -90,6 +101,7 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.VH> {
             todoItemDescription = itemView.findViewById(R.id.todoItemDescription);
             todoItemDate = itemView.findViewById(R.id.todoItemDate);
             todoItemTime = itemView.findViewById(R.id.todoItemTime);
+            todoAlarm = itemView.findViewById(R.id.imageViewAlarm);
         }
     }
 }
