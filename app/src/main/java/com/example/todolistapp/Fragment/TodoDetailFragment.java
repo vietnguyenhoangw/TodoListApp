@@ -138,7 +138,7 @@ public class TodoDetailFragment extends Fragment {
             LocalTime localTime = time.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
 
             days = localDate.getDayOfMonth();
-            months = localDate.getMonthValue();
+            months = localDate.getMonthValue() - 1;
             years = localDate.getYear();
 
             hours = localTime.getHour();
@@ -309,5 +309,6 @@ public class TodoDetailFragment extends Fragment {
                     }
                 }, years, months, days);
         datePickerDialog.show();
+        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
     }
 }

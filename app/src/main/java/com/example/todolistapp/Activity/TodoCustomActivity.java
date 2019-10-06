@@ -66,7 +66,10 @@ public class TodoCustomActivity extends AppCompatActivity {
         /* get current time */
         years = calendar.get(Calendar.YEAR);
         months = calendar.get(Calendar.MONTH);
-        days = calendar.get(calendar.DAY_OF_MONTH);
+        days = calendar.get(Calendar.DAY_OF_MONTH);
+
+        hours = calendar.get(Calendar.HOUR_OF_DAY);
+        minutes = calendar.get(Calendar.MINUTE);
 
         imDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,9 +157,11 @@ public class TodoCustomActivity extends AppCompatActivity {
                 years = calendar.get(Calendar.YEAR);
                 months = calendar.get(Calendar.MONTH);
                 days = calendar.get(Calendar.DAY_OF_MONTH);
+
             }
         }, years, months, days);
         datePickerDialog.show();
+        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
     }
 
     public void setImTimeClick() {
