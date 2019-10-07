@@ -18,6 +18,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -48,7 +49,7 @@ import static android.content.Context.ALARM_SERVICE;
 public class TodoDetailFragment extends Fragment {
 
     Button btnUpdate, btnDelete, set;
-    TextView name, date, time, description;
+    EditText name, date, time, description;
     DBHelper dbHelper;
     CheckBox checkBoxAlarm;
     ImageView DatePicker, TimePicker;
@@ -187,35 +188,14 @@ public class TodoDetailFragment extends Fragment {
 
         datepicked = date.getText().toString();
         timepicked = time.getText().toString();
-        datetimeAlarm = datepicked + " " + timepicked;
 
         if (todo.getStatus().equals("1")) {
             checkBoxAlarm.setChecked(true);
         }
-
-//        try {
-//            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-//            Date date = sdf.parse(datetimeAlarm);
-//            long millis = date.getTime();
-//
-//            alarmManager = (AlarmManager) getContext().getSystemService(ALARM_SERVICE);
-//            Intent intent = new Intent(getContext(), AlarmReceiver.class);
-//
-//            pendingIntent = PendingIntent.getBroadcast(getContext(),
-//                    0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//
-//            alarmManager.set(AlarmManager.RTC_WAKEUP, millis, pendingIntent);
-//
-//            Toast.makeText(getContext(), "" + millis, Toast.LENGTH_SHORT).show();
-//
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
     }
 
     /* update database's data when click */
     public void updateClick(Todo todo) {
-        Toast.makeText(getContext(), "update", Toast.LENGTH_SHORT).show();
 
         String nameUpdate = name.getText().toString();
         String dateUpdate = date.getText().toString();
@@ -223,27 +203,68 @@ public class TodoDetailFragment extends Fragment {
         String descriptionUpdate = description.getText().toString();
         String status;
 
-        if (checkBoxAlarm.isChecked()) {
-            status = "1";
+        datetimeAlarm = dateUpdate + " " + timeUpdate;
+
+        if (nameUpdate.trim().length() <= 0) {
+            name.setError("Provide a task name.");
         }
         else {
-            status = "0";
-        }
+            if (description.length() <= 0) {
 
-        Todo todoUpdate = new Todo(todo.getID(),
-                nameUpdate, dateUpdate, timeUpdate, descriptionUpdate, status);
+                descriptionUpdate = "No description";
 
-        try {
-            if (dbHelper.updateTodo(todoUpdate) > 0) {
-                Toast.makeText(getContext(), "Updated", Toast.LENGTH_SHORT).show();
-                getActivity().onBackPressed();
+            }
+
+            if (checkBoxAlarm.isChecked()) {
+                status = "1";
+
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                    Date date = sdf.parse(datetimeAlarm);
+                    long millis = date.getTime();
+
+                    alarmManager = (AlarmManager) getContext().getSystemService(ALARM_SERVICE);
+                    Intent intent = new Intent(getContext(), AlarmReceiver.class);
+                    intent.putExtra("TaskName", nameUpdate);
+                    intent.putExtra("TaskDescription", descriptionUpdate);
+                    intent.putExtra("ID", todo.getNotificationID());
+
+                    pendingIntent = PendingIntent.getBroadcast(getContext(),
+                            0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, millis, pendingIntent);
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
             else {
-                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+                status = "0";
+
+                alarmManager = (AlarmManager) getContext().getSystemService(ALARM_SERVICE);
+                Intent myIntent = new Intent(getContext(), AlarmReceiver.class);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                        getContext(), 1, myIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+
+                alarmManager.cancel(pendingIntent);
             }
-        }
-        catch (Exception e) {
-            Toast.makeText(getContext(), "" + e, Toast.LENGTH_SHORT).show();
+
+            Todo todoUpdate = new Todo(todo.getID(),
+                    nameUpdate, dateUpdate, timeUpdate, descriptionUpdate, status);
+
+            try {
+                if (dbHelper.updateTodo(todoUpdate) > 0) {
+                    Toast.makeText(getContext(), "Updated", Toast.LENGTH_SHORT).show();
+                    getActivity().onBackPressed();
+                }
+                else {
+                    Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+                }
+            }
+            catch (Exception e) {
+                Toast.makeText(getContext(), "" + e, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

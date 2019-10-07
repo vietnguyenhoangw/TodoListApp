@@ -2,8 +2,10 @@ package com.example.todolistapp.Activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,7 +22,10 @@ import android.widget.Toast;
 
 import com.example.todolistapp.Class.Todo;
 import com.example.todolistapp.DataBase.DBHelper;
+import com.example.todolistapp.New.AlarmReceiver;
 import com.example.todolistapp.R;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -46,7 +51,10 @@ public class TodoCustomActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     TextView toolbarTitle;
+    AlarmManager alarmManager;
+    PendingIntent pendingIntent;
 
+    public static int id = 0;
 
     /* this.Activity create */
     @Override
@@ -215,19 +223,49 @@ public class TodoCustomActivity extends AppCompatActivity {
         String time = edtTime.getText().toString();
         String description = edtDescription.getText().toString();
         String status;
-
-        if (checkBoxAlarm.isChecked()) {
-            status = "1";
-        }
-        else {
-            status = "0";
-        }
+        String datetimeAlarm = date + " " + time;
 
         if (name.trim().length() <= 0) {
             edtTodoName.setError("Provide a task name.");
         }
         else{
-            Todo todo = new Todo(name, date, time, description, status);
+
+            if (description.length() <= 0) {
+
+                description = "No description";
+
+            }
+
+            if (checkBoxAlarm.isChecked()) {
+                status = "1";
+
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                    Date date_toAlarm = sdf.parse(datetimeAlarm);
+                    long millis = date_toAlarm.getTime();
+
+                    alarmManager = (AlarmManager) this.getSystemService(ALARM_SERVICE);
+
+                    Intent intent = new Intent(this, AlarmReceiver.class);
+                    intent.putExtra("TaskName", name);
+                    intent.putExtra("TaskDescription", description);
+                    intent.putExtra("ID", id + "");
+
+                    pendingIntent = PendingIntent.getBroadcast(this,
+                            0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, millis, pendingIntent);
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+            else {
+                status = "0";
+            }
+
+            Todo todo = new Todo(name, date, time, description, status, id + "");
+            id ++;
 
             if (dbHelper.insertTodo(todo) > 0) {
                 Intent intent = new Intent(TodoCustomActivity.this, MainActivity.class);
@@ -237,6 +275,7 @@ public class TodoCustomActivity extends AppCompatActivity {
             else {
                 Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
             }
+
         }
     }
 

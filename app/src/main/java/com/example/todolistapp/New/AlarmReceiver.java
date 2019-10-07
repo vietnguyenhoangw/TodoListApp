@@ -7,10 +7,16 @@ import android.content.Intent;
 import com.example.todolistapp.R;
 
 public class AlarmReceiver extends BroadcastReceiver {
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        NotificationTask.createSampleNotification(context, 10,
-                R.drawable.ic_launcher_background,
-                "Todo List", "Please check your task now!!!");
+
+        String id = intent.getStringExtra("ID");
+
+        NotificationTask.createSampleNotification(context,
+                Integer.parseInt(id),
+                R.drawable.ic_notifications_active_black_24dp,
+                intent.getStringExtra("TaskName"),
+                intent.getStringExtra("TaskDescription"));
     }
 }

@@ -92,7 +92,8 @@ public class DBHelper {
             String time = cursor.getString(3);
             String description = cursor.getString(4);
             String status = cursor.getString(5);
-            arrayList.add(new Todo(id, todoName, date, time, description, status));
+            String notificationid = cursor.getString(6);
+            arrayList.add(new Todo(id, todoName, date, time, description, status, notificationid));
         }
 
         return arrayList;
@@ -112,6 +113,7 @@ public class DBHelper {
         contentValues.put("Time", todo.getTodoTime());
         contentValues.put("Description", todo.getTodoDescription());
         contentValues.put("Status", todo.getStatus());
+        contentValues.put("NotificationID", todo.getNotificationID());
 
         long result = db.insert("Todo",
                 null,
