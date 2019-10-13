@@ -54,7 +54,7 @@ public class TodoCustomActivity extends AppCompatActivity {
     AlarmManager alarmManager;
     PendingIntent pendingIntent;
 
-    public static int id = 0;
+    int id;
 
     /* this.Activity create */
     @Override
@@ -127,6 +127,9 @@ public class TodoCustomActivity extends AppCompatActivity {
                 setImDateClick();
             }
         });
+
+        // create id to push in notification id.
+        id = dbHelper.getTodo().size();
     }
 
     /* mapping xml widget id to variable */
@@ -278,6 +281,8 @@ public class TodoCustomActivity extends AppCompatActivity {
 
         }
     }
+
+
 
     /*back button pressed custom*/
     @Override

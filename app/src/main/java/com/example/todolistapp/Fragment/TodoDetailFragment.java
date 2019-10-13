@@ -215,6 +215,14 @@ public class TodoDetailFragment extends Fragment {
 
             }
 
+            Intent intent = new Intent(getContext(), AlarmReceiver.class);
+            intent.putExtra("TaskName", nameUpdate);
+            intent.putExtra("TaskDescription", descriptionUpdate);
+            intent.putExtra("ID", todo.getNotificationID());
+
+            pendingIntent = PendingIntent.getBroadcast(getContext(),
+                    0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
             if (checkBoxAlarm.isChecked()) {
                 status = "1";
 
@@ -224,13 +232,6 @@ public class TodoDetailFragment extends Fragment {
                     long millis = date.getTime();
 
                     alarmManager = (AlarmManager) getContext().getSystemService(ALARM_SERVICE);
-                    Intent intent = new Intent(getContext(), AlarmReceiver.class);
-                    intent.putExtra("TaskName", nameUpdate);
-                    intent.putExtra("TaskDescription", descriptionUpdate);
-                    intent.putExtra("ID", todo.getNotificationID());
-
-                    pendingIntent = PendingIntent.getBroadcast(getContext(),
-                            0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                     alarmManager.set(AlarmManager.RTC_WAKEUP, millis, pendingIntent);
 
@@ -242,10 +243,10 @@ public class TodoDetailFragment extends Fragment {
                 status = "0";
 
                 alarmManager = (AlarmManager) getContext().getSystemService(ALARM_SERVICE);
-                Intent myIntent = new Intent(getContext(), AlarmReceiver.class);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                        getContext(), 1, myIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
+
+                pendingIntent = PendingIntent.getBroadcast(
+                        getContext(), 0, intent,
+                        PendingIntent.FLAG_CANCEL_CURRENT);
 
                 alarmManager.cancel(pendingIntent);
             }
